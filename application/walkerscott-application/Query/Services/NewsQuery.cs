@@ -1,5 +1,6 @@
 ﻿using walkerscott_application.Dto;
 using walkerscott_application.Query.Interfaces;
+using walkerscott_application.Utilities;
 using walkerscott_domain.Entities;
 using walkerscott_domain.Interfaces.Repository;
 
@@ -7,10 +8,13 @@ namespace walkerscott_application.Query.Services
 {
     public class NewsQuery : INewsQuery
     {
-        private readonly INewsQueryRepository newsQueryRepository;
-        public NewsQuery(INewsQueryRepository _newsQueryRepository)
+        private readonly INewsQueryRepository _newsQueryRepository;
+        private readonly RequestInfo _requestInfo;
+
+        public NewsQuery(INewsQueryRepository newsQueryRepository, RequestInfo requestInfo)
         {
-            newsQueryRepository = _newsQueryRepository;
+            _newsQueryRepository = newsQueryRepository;
+            _requestInfo = requestInfo;
         }
         public async Task<GetNewsResponseDto> GetAllArticles()
         {
@@ -19,11 +23,14 @@ namespace walkerscott_application.Query.Services
 
         public async Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries)
         {
-          var newsArticles =  await newsQueryRepository.GetByPage(pageNo, perPageEntries);
+          var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries);
+            var prevPage = pageNo == 1 ? pageNo : pageNo-1;
             GetNewsResponseDto getNewsResponseDto = new GetNewsResponseDto()
-            { 
-                Articles = new List<NewsArticleDto>(), 
-               // PrevPageLink = 
+            {
+                Articles = new List<NewsArticleDto>(),
+                PrevPageLink = "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={prevPage}" + "&" + $"perPage={perPageEntries}",
+                //NextPageLink = "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={pageNo+1}" + "&" + $"perPage={perPageEntries}"
+                NextPageLink = "https://" + _requestInfo.Host + _requestInfo.Path + _requestInfo.QueryString
             };
              foreach(var article in newsArticles) {
                 var newArticle = new NewsArticleDto()

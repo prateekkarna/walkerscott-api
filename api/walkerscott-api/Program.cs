@@ -7,6 +7,7 @@ using walkerscott_application.Query.Interfaces;
 using walkerscott_application.Query.Services;
 using walkerscott_domain.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
+using walkerscott_application.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,8 @@ builder.Services.AddSwaggerGen();
 //builder.Services.AddScoped<INewsCommandRepository,>()
 builder.Services.AddScoped<INewsQueryRepository, NewsQueryRepository>();
 builder.Services.AddScoped<INewsQuery, NewsQuery>();
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<RequestInfo>();
 
 
 builder.Services.AddTransient<ApplicationDbContext>();

@@ -1,4 +1,7 @@
-﻿using wakerscott_integration.DbConfigurations;
+﻿using System.Data;
+using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
+using wakerscott_integration.DbConfigurations;
 using walkerscott_domain.Entities;
 using walkerscott_domain.Interfaces.Repository;
 
@@ -7,11 +10,12 @@ namespace wakerscott_integration.Services
     public class NewsCommandRepository : INewsCommandRepository
     {
         private ApplicationDbContext _dbContext;
+        
 
-
-        public NewsCommandRepository(ApplicationDbContext dbContext)
+        public NewsCommandRepository(ApplicationDbContext dbContext,IDbTransaction dbTransaction)
         {
             _dbContext = dbContext;
+            _dbContext.Database.UseTransaction((DbTransaction)dbTransaction);
         }
 
         public Task<bool> CreateNews(NewsArticle newsArticle)

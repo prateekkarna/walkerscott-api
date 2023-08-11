@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
 using wakerscott_integration.DbConfigurations;
 using walkerscott_domain.Entities;
 using walkerscott_domain.Interfaces.Repository;
@@ -34,6 +35,15 @@ namespace wakerscott_integration.Services
 
         public async Task<NewsArticle> GetByTitle(string title)
         {
+            //var news = await _dbContext.NewsArticles
+            //    .Include(a => a.Category)
+            //    .OrderBy(x => x.CreatedOn)
+            //    .Select(x =>
+            //    new NewsArticle { Title = , Description = x.Description, CategoryId = x.CategoryId,
+            //        CreatedOn = x.CreatedOn, Category = x.Category }
+            //    ).ToListAsync();
+
+            //return news;
             throw new NotImplementedException();
         }
 
