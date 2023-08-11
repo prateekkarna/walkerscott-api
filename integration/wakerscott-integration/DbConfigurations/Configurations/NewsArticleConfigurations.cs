@@ -14,7 +14,7 @@ namespace wakerscott_integration.DbConfigurations.Configurations
             entity.Property(e => e.CreatedOn).HasColumnType("datetime").HasDefaultValue(DateTime.Now);
             entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
-            entity.Property(e => e.Description).HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(5000);
 
             entity.Property(e => e.Title).HasMaxLength(50);
 

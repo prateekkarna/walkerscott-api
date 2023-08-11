@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wakerscott_integration.DbConfigurations;
 
@@ -11,9 +12,11 @@ using wakerscott_integration.DbConfigurations;
 namespace wakerscott_integration.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230811152131_intialcreate")]
+    partial class intialcreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,12 +45,12 @@ namespace wakerscott_integration.Migrations
                     b.Property<DateTime?>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2023, 8, 11, 21, 0, 38, 169, DateTimeKind.Local).AddTicks(464));
+                        .HasDefaultValue(new DateTime(2023, 8, 11, 20, 51, 30, 867, DateTimeKind.Local).AddTicks(3708));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
@@ -91,7 +94,7 @@ namespace wakerscott_integration.Migrations
                     b.Property<DateTime?>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2023, 8, 11, 21, 0, 38, 169, DateTimeKind.Local).AddTicks(6206));
+                        .HasDefaultValue(new DateTime(2023, 8, 11, 20, 51, 30, 868, DateTimeKind.Local).AddTicks(4244));
 
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
