@@ -12,10 +12,14 @@ namespace wakerscott_integration.DbConfigurations.Configurations
                 .HasName("PK__NewsArticle");
 
             entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
             entity.Property(e => e.Description).HasMaxLength(100);
 
             entity.Property(e => e.Title).HasMaxLength(50);
+
+            entity.Property(e => e.CreatedBy).HasMaxLength(50);
+            entity.Property(e => e.ModifiedBy).HasMaxLength(50);
 
             entity.HasOne(d => d.Category)
                 .WithMany(p => p.NewsArticles)

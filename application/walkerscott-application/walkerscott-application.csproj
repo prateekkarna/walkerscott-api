@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\domain\walkerscott-domain\walkerscott-domain.csproj" />
+  </ItemGroup>
+
 </Project>
