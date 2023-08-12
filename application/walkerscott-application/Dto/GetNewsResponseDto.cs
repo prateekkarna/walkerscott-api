@@ -5,5 +5,6 @@
         public List<NewsArticleDto>? Articles { get; set; }
         public string? PrevPageLink { get; set; }
         public string? NextPageLink { get; set; }
+        public int? NoOfPages { get; set; }
     }
 }
