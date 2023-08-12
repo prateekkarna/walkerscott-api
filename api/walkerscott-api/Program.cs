@@ -23,6 +23,11 @@ builder.Services.AddScoped<INewsQuery, NewsQuery>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<RequestInfo>();
 
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 
 builder.Services.AddTransient<ApplicationDbContext>();
 
@@ -68,7 +73,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("corsapp");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
