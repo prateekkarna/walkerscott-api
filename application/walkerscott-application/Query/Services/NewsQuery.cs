@@ -25,14 +25,21 @@ namespace walkerscott_application.Query.Services
         {
             var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries);
             var totalPages = await _newsQueryRepository.GetTotalCount()/perPageEntries;
-            var prevPage = pageNo == 1 ? pageNo : pageNo-1;
+
+            var prevPage = pageNo == 1 ? pageNo : pageNo - 1;
             var nextPage = pageNo != totalPages ? pageNo + 1 : 0;
+
+            var prevPageLink =
+                pageNo == 1 ? null : "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={prevPage}" + "&" + $"perPage={perPageEntries}";
+            var nextPageLink =
+                pageNo == totalPages ? null : "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={nextPage}" + "&" + $"perPage={perPageEntries}";
+            
 
             GetNewsResponseDto getNewsResponseDto = new GetNewsResponseDto()
             {
                 Articles = new List<NewsArticleDto>(),
-                PrevPageLink = "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={prevPage}" + "&" + $"perPage={perPageEntries}",
-                NextPageLink = "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={nextPage}" + "&" + $"perPage={perPageEntries}",
+                PrevPageLink = prevPageLink,
+                NextPageLink = nextPageLink,
                 NoOfPages = totalPages
             };
 
