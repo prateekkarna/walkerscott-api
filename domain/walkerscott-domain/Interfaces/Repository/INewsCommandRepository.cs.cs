@@ -7,5 +7,7 @@ namespace walkerscott_domain.Interfaces.Repository
         Task<bool> CreateNews(NewsArticle newsArticle);
 
         Task<bool> UpdateNews(NewsArticle newsArticle);
+
+        Task<bool> DeleteNews(int id);
     }
 }

@@ -19,7 +19,7 @@ namespace wakerscott_integration.DbConfigurations.Configurations
             entity.Property(e => e.Title).HasMaxLength(50);
 
             entity.Property(e => e.CreatedBy).HasMaxLength(50);
-            entity.Property(e => e.ModifiedBy).HasMaxLength(50);
+            entity.Property(e => e.ModifiedBy).HasMaxLength(50).IsRequired(false);
 
             entity.HasOne(d => d.Category)
                 .WithMany(p => p.NewsArticles)

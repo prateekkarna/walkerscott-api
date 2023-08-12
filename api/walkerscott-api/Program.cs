@@ -8,6 +8,10 @@ using walkerscott_application.Query.Services;
 using walkerscott_domain.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 using walkerscott_application.Utilities;
+using walkerscott_application.Command.Interfaces;
+using walkerscott_application.Command.Services;
+using walkerscott_domain.Interfaces.UnitOfWork;
+using walkerscott_application.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +21,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddScoped<INewsCommandRepository,>()
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<INewsQueryRepository, NewsQueryRepository>();
 builder.Services.AddScoped<INewsQuery, NewsQuery>();
+builder.Services.AddScoped<INewsCommandRepository, NewsCommandRepository>();
+builder.Services.AddScoped<INewsCommand, NewsCommand>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<RequestInfo>();
 
@@ -60,8 +66,8 @@ builder.Services.AddDbContext<ApplicationDbContext>((sp, optionsBuilder) =>
 
 {
     var cn = (DbConnection)sp.GetRequiredService<IDbConnection>();
-    var cns = builder.Configuration.GetConnectionString("ApplicationDbConnection");
-    optionsBuilder.UseSqlServer(cns);
+    //var cns = builder.Configuration.GetConnectionString("ApplicationDbConnection");
+    optionsBuilder.UseSqlServer(cn);
 
 });
 

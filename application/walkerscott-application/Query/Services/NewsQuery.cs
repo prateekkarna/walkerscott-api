@@ -21,9 +21,9 @@ namespace walkerscott_application.Query.Services
             throw new NotImplementedException();
         }
 
-        public async Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries)
+        public async Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries, string searchParam)
         {
-            var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries);
+            var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries, searchParam);
             var totalPages = await _newsQueryRepository.GetTotalCount()/perPageEntries;
 
             var prevPage = pageNo == 1 ? pageNo : pageNo - 1;
