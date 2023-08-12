@@ -28,7 +28,7 @@ namespace wakerscott_integration.Services
                 .Skip((pageNo - 1) * perPageEntries)
                 .Take(perPageEntries)
                 .Select(x =>
-                new NewsArticle { Title = x.Title, Description = x.Description, CategoryId = x.CategoryId,CreatedOn = x.CreatedOn,Category = x.Category }
+                new NewsArticle { ArticleId = x.ArticleId,Title = x.Title, Description = x.Description, CategoryId = x.CategoryId,CreatedOn = x.CreatedOn,Category = x.Category }
                 ).ToListAsync();            
             return news;
         }

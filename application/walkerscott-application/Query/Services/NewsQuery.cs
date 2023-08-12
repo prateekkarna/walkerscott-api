@@ -23,18 +23,20 @@ namespace walkerscott_application.Query.Services
 
         public async Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries)
         {
-          var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries);
+            var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries);
             var prevPage = pageNo == 1 ? pageNo : pageNo-1;
+            
             GetNewsResponseDto getNewsResponseDto = new GetNewsResponseDto()
             {
                 Articles = new List<NewsArticleDto>(),
                 PrevPageLink = "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={prevPage}" + "&" + $"perPage={perPageEntries}",
-                //NextPageLink = "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={pageNo+1}" + "&" + $"perPage={perPageEntries}"
-                NextPageLink = "https://" + _requestInfo.Host + _requestInfo.Path + _requestInfo.QueryString
+                NextPageLink = "https://" + _requestInfo.Host + _requestInfo.Path + _requestInfo.QueryString,
+                NoOfPages = pageNo
             };
              foreach(var article in newsArticles) {
                 var newArticle = new NewsArticleDto()
                 {
+                    ArticleId = article.ArticleId,
                     Description = article.Description,
                     Title = article.Title,  
                     CategoryName = article.Category.CategoryName,    
