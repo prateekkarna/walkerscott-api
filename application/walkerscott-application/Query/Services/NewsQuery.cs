@@ -25,12 +25,13 @@ namespace walkerscott_application.Query.Services
         {
             var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries);
             var prevPage = pageNo == 1 ? pageNo : pageNo-1;
-            var nextPage = pageNo == 
+            
             GetNewsResponseDto getNewsResponseDto = new GetNewsResponseDto()
             {
                 Articles = new List<NewsArticleDto>(),
                 PrevPageLink = "https://" + _requestInfo.Host + $"/api/News/GetNewsByPage?pageNo={prevPage}" + "&" + $"perPage={perPageEntries}",
-                NextPageLink = "https://" + _requestInfo.Host + _requestInfo.Path + _requestInfo.QueryString
+                NextPageLink = "https://" + _requestInfo.Host + _requestInfo.Path + _requestInfo.QueryString,
+                NoOfPages = pageNo
             };
              foreach(var article in newsArticles) {
                 var newArticle = new NewsArticleDto()
