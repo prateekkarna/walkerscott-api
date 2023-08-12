@@ -33,6 +33,13 @@ namespace wakerscott_integration.Services
             return news;
         }
 
+        public async Task<int> GetTotalCount()
+        {
+            int news = _dbContext.NewsArticles.AsQueryable().Count();
+                
+            return news;
+        }
+
         public async Task<NewsArticle> GetByTitle(string title)
         {
             //var news = await _dbContext.NewsArticles

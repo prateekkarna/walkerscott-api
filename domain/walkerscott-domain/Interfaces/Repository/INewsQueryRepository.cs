@@ -8,6 +8,8 @@ namespace walkerscott_domain.Interfaces.Repository
 
          Task<List<NewsArticle>> GetAll();
 
+        Task<int> GetTotalCount();
+
         Task<List<NewsArticle>> GetByPage(int pageNo, int perPageEntries);
     }
 }
