@@ -24,7 +24,8 @@ namespace walkerscott_application.Query.Services
         public async Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries, string searchParam)
         {
             var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries, searchParam);
-            var totalPages = await _newsQueryRepository.GetTotalCount()/perPageEntries;
+            var totalEntries = await _newsQueryRepository.GetTotalCount();
+            var totalPages = (totalEntries / perPageEntries) + (totalEntries % perPageEntries == 0 ? 0 : 1) ;
 
             var prevPage = pageNo == 1 ? pageNo : pageNo - 1;
             var nextPage = pageNo != totalPages ? pageNo + 1 : 0;
@@ -50,6 +51,7 @@ namespace walkerscott_application.Query.Services
                     Description = article.Description,
                     Title = article.Title,  
                     CategoryName = article.Category.CategoryName,    
+                    CategoryId = article.Category.CategoryId,
                     CreatedOn   = article.CreatedOn
                 };
 
