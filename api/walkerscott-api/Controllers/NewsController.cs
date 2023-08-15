@@ -23,7 +23,7 @@ namespace walkerscott_api.Controllers
         {
             try
             {
-                var newsArticles = await _newsQuery.GetByPage(pageNo, perPage, "");
+                var newsArticles = await _newsQuery.GetByPage(pageNo, perPage);
                 ApiResponse<GetNewsResponseDto> apiResponse = new ApiResponse<GetNewsResponseDto>()
                 { 
                     Data = newsArticles,
@@ -36,6 +36,29 @@ namespace walkerscott_api.Controllers
             }
 
             catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> SearchNews(int pageNo, int perPage, string searchString = "")
+        {
+            try
+            {
+                var newsArticles = await _newsQuery.GetByCountAndSearchParam(pageNo, perPage, searchString);
+                ApiResponse<GetNewsResponseDto> apiResponse = new ApiResponse<GetNewsResponseDto>()
+                {
+                    Data = newsArticles,
+                    IsSuccess = true,
+                    StatusCode = 200
+                };
+
+                return new OkObjectResult(apiResponse);
+
+            }
+
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

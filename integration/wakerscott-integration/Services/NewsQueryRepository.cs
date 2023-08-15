@@ -1,7 +1,9 @@
 ﻿using Azure;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq.Expressions;
 using wakerscott_integration.DbConfigurations;
 using walkerscott_domain.Entities;
 using walkerscott_domain.Interfaces.Repository;
@@ -18,16 +20,45 @@ namespace wakerscott_integration.Services
             _dbContext = dbContext;
             _dbContext.Database.UseTransaction((DbTransaction)dbTransaction);
         }
-        public async Task<List<NewsArticle>> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<NewsArticle>> GetByPage(int pageNo, int perPageEntries, string searchParam)
+        public async Task<List<NewsArticle>> GetByCountAndSearchParam(int count, string searchString)
         {
             try
             {
-                var searchableWords = searchParam.Split(" ").ToList();
+                var strCompareHash = searchString.Split(' ');
+                var news = await _dbContext.NewsArticles.Include(a => a.Category)
+                    .OrderBy(a => a.CreatedOn)
+                    .Where(n => strCompareHash.Any(x => n.Description.Contains(x)))
+                    .Take(count)
+                    .Select(x =>
+                        new NewsArticle
+                            {
+                                ArticleId = x.ArticleId,
+                                Title = x.Title,
+                                Description = x.Description,
+                                CategoryId = x.CategoryId,
+                                CreatedOn = x.CreatedOn,
+                                Category = x.Category
+                            })
+                    .ToListAsync();
+
+                return news;
+
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static bool CheckIfMatches(HashSet<string> x, string y ) => x.Intersect(y.Split(' ', StringSplitOptions.None).ToHashSet()).Count() > 0;
+
+        //Expression<Func<int>> testExpr = () => CheckIfMatches(3, 4);
+
+        public async Task<List<NewsArticle>> GetByPage(int pageNo, int perPageEntries)
+        {
+            try
+            {
                 var news = await _dbContext.NewsArticles
                 .Include(a => a.Category)
                 .OrderBy(x => x.CreatedOn)
@@ -54,9 +85,9 @@ namespace wakerscott_integration.Services
         {
             try
             {
-                int news = await _dbContext.NewsArticles.AsQueryable().CountAsync();
+                int newsCount = await _dbContext.NewsArticles.AsQueryable().CountAsync();
 
-                return news;
+                return newsCount;
             }
             catch(Exception ex)
             {
@@ -90,5 +121,34 @@ namespace wakerscott_integration.Services
             }
         }
 
+        public async Task<List<NewsArticle>> GetByCount(int count, int skip)
+        {
+            try
+            {
+                var news = await _dbContext.NewsArticles.Include(a => a.Category)
+                    .OrderBy(a => a.CreatedOn)
+                    .Skip(skip)
+                    .Take(count)
+                    .Select(x =>
+                        new NewsArticle
+                        {
+                            ArticleId = x.ArticleId,
+                            Title = x.Title,
+                            Description = x.Description,
+                            CategoryId = x.CategoryId,
+                            CreatedOn = x.CreatedOn,
+                            Category = x.Category
+                        })
+                    .ToListAsync();
+
+                return news;
+
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

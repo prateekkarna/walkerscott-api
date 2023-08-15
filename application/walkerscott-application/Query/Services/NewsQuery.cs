@@ -21,9 +21,68 @@ namespace walkerscott_application.Query.Services
             throw new NotImplementedException();
         }
 
-        public async Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries, string searchParam)
+        public async Task<GetNewsResponseDto> GetByCountAndSearchParam(int pageNo, int perPage, string searchString, int record)
         {
-            var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries, searchParam);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var totalCount = await _newsQueryRepository.GetTotalCount();
+
+                var bestMatch = new List<NewsArticle>();
+
+                int loop = 0;
+
+                while (bestMatch.Count < perPage)
+                {
+                    var articles = await GetByCount(perPage * 5 , pageNo * loop * perPage * 5);
+                    var match = MatchUtil.FindTopNBestMatch(searchString, articles, perPage).ToList();
+                    match.ForEach(m => bestMatch.Add(m));
+                    loop++;
+                    if (pageNo * loop * perPage * 5> totalCount)
+                        break;
+
+                }
+
+
+                GetNewsResponseDto getNewsResponseDto = new GetNewsResponseDto()
+                {
+                    Articles = new List<NewsArticleDto>(),
+                    //PrevPageLink = prevPageLink,
+                    //NextPageLink = nextPageLink,
+                    //NoOfPages = totalPages
+                };
+
+                foreach (var article in bestMatch)
+                {
+                    var newArticle = new NewsArticleDto()
+                    {
+                        ArticleId = article.ArticleId,
+                        Description = article.Description,
+                        Title = article.Title,
+                        CategoryName = article.Category.CategoryName,
+                        CategoryId = article.Category.CategoryId,
+                        CreatedOn = article.CreatedOn
+                    };
+
+                    getNewsResponseDto.Articles.Add(newArticle);
+
+                }
+                return getNewsResponseDto;
+            }
+            else
+            {
+                return await GetByPage(pageNo, perPage);
+            }
+        }
+
+        private async Task<List<NewsArticle>> GetByCount(int count, int skip)
+        {
+            return await _newsQueryRepository.GetByCount(count, skip);
+        }
+
+        public async Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries)
+        {
+            var newsArticles =  await _newsQueryRepository.GetByPage(pageNo, perPageEntries);
             var totalEntries = await _newsQueryRepository.GetTotalCount();
             var totalPages = (totalEntries / perPageEntries) + (totalEntries % perPageEntries == 0 ? 0 : 1) ;
 

@@ -6,7 +6,9 @@ namespace walkerscott_application.Query.Interfaces
     public interface INewsQuery
     {
         public Task<GetNewsResponseDto> GetAllArticles();
-        public Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries, string searchParam);
+        public Task<GetNewsResponseDto> GetByPage(int pageNo, int perPageEntries);
         public Task<GetNewsResponseDto> GetByTitle(string title);
+
+        public Task<GetNewsResponseDto> GetByCountAndSearchParam(int pageNo, int perPage , string searchString);
     }
 }

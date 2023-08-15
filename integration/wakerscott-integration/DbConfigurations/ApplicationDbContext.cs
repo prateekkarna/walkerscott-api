@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using walkerscott_domain.Entities;
 
 namespace wakerscott_integration.DbConfigurations
@@ -10,6 +11,7 @@ namespace wakerscott_integration.DbConfigurations
 
         }
 
+
         public virtual DbSet<NewsArticle> NewsArticles { get; set; }
         public virtual DbSet<NewsCategory> NewsCategories { get; set; }
 
@@ -17,6 +19,7 @@ namespace wakerscott_integration.DbConfigurations
         {
             modelBuilder.ApplyConfiguration(new Configurations.NewsArticleConfigurations());
             modelBuilder.ApplyConfiguration(new Configurations.NewsCategoryConfigurations());
+            
 
         }
 
