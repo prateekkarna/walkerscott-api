@@ -1,10 +1,9 @@
-﻿using Azure;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
 using wakerscott_integration.DbConfigurations;
+using wakerscott_integration.Extensions;
 using walkerscott_domain.Entities;
 using walkerscott_domain.Interfaces.Repository;
 
@@ -25,20 +24,36 @@ namespace wakerscott_integration.Services
             try
             {
                 var strCompareHash = searchString.Split(' ');
+                //var news = await _dbContext.NewsArticles.Include(a => a.Category)
+                //    .OrderBy(a => a.CreatedOn)
+                //    .DescriptionLikeAny(strCompareHash)
+                //    .Take(count)
+                //    .Select(x =>
+                //        new NewsArticle
+                //        {
+                //            ArticleId = x.ArticleId,
+                //            Title = x.Title,
+                //            Description = x.Description,
+                //            CategoryId = x.CategoryId,
+                //            CreatedOn = x.CreatedOn,
+                //            Category = x.Category
+                //        })
+                //    .ToListAsync();
+
                 var news = await _dbContext.NewsArticles.Include(a => a.Category)
                     .OrderBy(a => a.CreatedOn)
-                    .Where(n => strCompareHash.Any(x => n.Description.Contains(x)))
+                    .WhereAny(strCompareHash.Select(w => (Expression<Func<NewsArticle, bool>>)(x => EF.Functions.Like(x.Description, '%'+w+'%') || EF.Functions.Like(x.Title, '%' + w + '%'))).ToArray())
                     .Take(count)
                     .Select(x =>
                         new NewsArticle
-                            {
-                                ArticleId = x.ArticleId,
-                                Title = x.Title,
-                                Description = x.Description,
-                                CategoryId = x.CategoryId,
-                                CreatedOn = x.CreatedOn,
-                                Category = x.Category
-                            })
+                        {
+                            ArticleId = x.ArticleId,
+                            Title = x.Title,
+                            Description = x.Description,
+                            CategoryId = x.CategoryId,
+                            CreatedOn = x.CreatedOn,
+                            Category = x.Category
+                        })
                     .ToListAsync();
 
                 return news;

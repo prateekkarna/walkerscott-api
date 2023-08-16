@@ -30,12 +30,13 @@ namespace walkerscott_application.Query.Services
 
                 var bestMatch = new List<NewsArticle>();
 
-                int loop = 0;
+                int loop = 1;
 
                 while (bestMatch.Count < perPage)
                 {
-                    var articles = await GetByCount(perPage * 5 , pageNo * loop * perPage * 5);
-                    var match = MatchUtil.FindTopNBestMatch(searchString, articles, perPage).ToList();
+                    var articles = await _newsQueryRepository.GetByCountAndSearchParam(100 * loop, searchString);
+                    //var articles = await GetByCount(perPage * 5 , pageNo * loop * perPage * 5);
+                    var match = MatchUtil.FindTopNBestMatch(searchString, articles, perPage, perPage * (pageNo - 1)).ToList();
                     match.ForEach(m => bestMatch.Add(m));
                     loop++;
                     if (pageNo * loop * perPage * 5> totalCount)
@@ -43,12 +44,23 @@ namespace walkerscott_application.Query.Services
 
                 }
 
+                var totalPages = (totalCount / perPage) + (totalCount % perPage == 0 ? 0 : 1);
+
+                var prevPage = pageNo == 1 ? pageNo : pageNo - 1;
+                var nextPage = pageNo != totalPages ? pageNo + 1 : 0;
+
+                var prevPageLink =
+                    pageNo == 1 ? null : "https://" + _requestInfo.Host + $"/api/News/Search?pageNo={prevPage}" + "&" + $"perPage={perPage}" + "&" + $"searchString={searchString}";
+                var nextPageLink =
+                    pageNo == totalPages ? null : "https://" + _requestInfo.Host + $"/api/News/Search?pageNo={nextPage}" + "&" + $"perPage={perPage}" + "&" + $"searchString={searchString}";
+
+
 
                 GetNewsResponseDto getNewsResponseDto = new GetNewsResponseDto()
                 {
                     Articles = new List<NewsArticleDto>(),
-                    //PrevPageLink = prevPageLink,
-                    //NextPageLink = nextPageLink,
+                    PrevPageLink = prevPageLink,
+                    NextPageLink = nextPageLink,
                     //NoOfPages = totalPages
                 };
 
