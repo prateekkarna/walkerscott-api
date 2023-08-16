@@ -21,7 +21,7 @@ namespace walkerscott_application.Query.Services
             throw new NotImplementedException();
         }
 
-        public async Task<GetNewsResponseDto> GetByCountAndSearchParam(int pageNo, int perPage, string searchString, int record)
+        public async Task<GetNewsResponseDto> GetByCountAndSearchParam(int pageNo, int perPage, string searchString)
         {
 
             if (!String.IsNullOrEmpty(searchString))
